@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block scripts %}
+    <link rel="stylesheet" href="{% static 'css/cards.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="conatiner">
+        <div class="wrap">
+            {% for room in rooms %}
+                <div style="background: url('{% if room.room_type == 'HALL' %}{% static 'images/hall.png' %}{% elif room.room_type == 'KITCHEN' %}{% static 'images/kitchen.png' %}{% elif room.room_type == 'BEDROOM' %}{% static 'images/bedroom.png' %}{% endif %}')"
+                     class="box one">
+                    <h1>room.room_name</h1>
+                </div>
+            {% endfor %}
+
+            <div style="background: url('{% static 'images/add_new.png' %}')" class="box one">
+                <h1>Add New Room</h1>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
