@@ -106,36 +106,47 @@
                             </tr>
                         </table>
                     {% endif %}
+                <button class="btn" style="position: static; left: 90%; top: 90%" onclick="delete_device('{{ device.pk }}')"><i class="fa fa-trash"></i></button>
                 </div>
             {% endfor %}
 
-            <div style="background: url('{% static 'images/add_new.png' %}')" class="box one">
+            <div style="background: url('{% static 'images/add_new.png' %}')" class="box one" data-add-device="1">
                 <h1>Add New Device</h1>
             </div>
 
         </div>
     </div>
 
+    {% if request.GET.room %}
+        <button class="w-10 text-white text-center btn btn-danger" onclick="delete_room()">Delete Room</button>
+    {% endif %}
+
     <script>
+
+        $('div[data-add-device]').click(function () {
+            window.location.href = '/add_device';
+            return false;
+        });
+
         $("input[data-toggle]").change(function () {
-            var value = false;
+            let value = false;
             if ($(this).prop('checked'))
                 value = true;
-            var data = {
+            let data = {
                 'pk': $(this).attr('data-id')
             };
             data[$(this).attr('data-key')] = value;
             api_call(data);
         });
         $("input.custom-range").change(function () {
-            var data = {
+            let data = {
                 'pk': $(this).attr('data-id')
             };
             data[$(this).attr('data-key')] = $(this).val();
             api_call(data);
         });
         $("select").change(function () {
-            var data = {
+            let data = {
                 'pk': $(this).attr('data-id')
             };
             data[$(this).attr('data-key')] = $(this).val();
@@ -143,19 +154,56 @@
         });
 
         function api_call(data) {
-            var settings = {
-                "url": window.location.origin + "/device_control",
-                "method": "PUT",
-                "headers": {
+            $.ajax({
+                url: window.location.origin + "/device_control",
+                method: "PUT",
+                headers: {
                     "X-CSRFToken": '{{ csrf_token }}',
                     "content-type": "application/json",
                 },
-                "processData": false,
-                "data": JSON.stringify(data)
-            };
-            $.ajax(settings).done(function (data) {
+                data: JSON.stringify(data)
+            }).done(function (data) {
                 console.log(data);
             });
+        }
+
+        function delete_device(id) {
+            let data = JSON.stringify({pk: id});
+            let conf = confirm('Are you sure you want to delete this device?');
+            if (!conf)
+                return;
+            $.ajax({
+                url: window.location.origin + '/delete_device',
+                method: 'DELETE',
+                headers:{
+                    "X-CSRFToken": '{{ csrf_token }}',
+                    "content-type": "application/json",
+                },
+                data: data,
+                success: function (data) {
+                    window.location.reload();
+                }
+            })
+        }
+
+        function delete_room() {
+            let r = confirm('Are sure you want to delete this room?');
+            if (r === true) {
+                var data = {
+                    pk: '{{ request.GET.room }}'
+                };
+                $.ajax({
+                    url: window.location.origin + "/delete_room",
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRFToken": '{{ csrf_token }}',
+                        "content-type": "application/json",
+                    },
+                    data: JSON.stringify(data)
+                }).done(function (data) {
+                    window.location.href = window.location.origin + '/rooms'
+                });
+            }
         }
     </script>
 {% endblock %}

@@ -28,6 +28,10 @@ class Device(models.Model):
     ALARM = 'ALARM'
     STATUS_ON = True
     STATUS_OFF = False
+    STATUS_OPTION = (
+        (STATUS_ON, 'On'),
+        (STATUS_OFF, 'OFF')
+    )
     DEVICE_TYPE = (
         (AC, 'AC'),
         (TV, 'TV'),
@@ -48,8 +52,8 @@ class Light(models.Model):
     MIN_BRIGHTNESS = 1
     MAX_BRIGHTNESS = 10
     device = models.OneToOneField(Device, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
-    brightness = models.PositiveSmallIntegerField(validators=[MinValueValidator(MIN_BRIGHTNESS), MaxValueValidator(MAX_BRIGHTNESS)])
+    status = models.BooleanField(choices=Device.STATUS_OPTION, default=False)
+    brightness = models.PositiveSmallIntegerField(validators=[MinValueValidator(MIN_BRIGHTNESS), MaxValueValidator(MAX_BRIGHTNESS)], default=MIN_BRIGHTNESS)
 
     def __str__(self):
         return self.device.room.room_name + ' ' + self.device.name
@@ -59,8 +63,8 @@ class Fan(models.Model):
     MIN_SPEED = 1
     MAX_SPEED = 10
     device = models.OneToOneField(Device, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
-    speed = models.PositiveSmallIntegerField(validators=[MinValueValidator(MIN_SPEED), MaxValueValidator(MAX_SPEED)])
+    status = models.BooleanField(choices=Device.STATUS_OPTION, default=False)
+    speed = models.PositiveSmallIntegerField(validators=[MinValueValidator(MIN_SPEED), MaxValueValidator(MAX_SPEED)], default=MIN_SPEED)
 
     def __str__(self):
         return self.device.room.room_name + ' ' + self.device.name
@@ -78,9 +82,9 @@ class AC(models.Model):
         (FAN, 'Fan')
     )
     device = models.OneToOneField(Device, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
-    temperature = models.PositiveSmallIntegerField(validators=[MinValueValidator(MIN_TEMP), MaxValueValidator(MAX_TEMP)])
-    mode = models.PositiveSmallIntegerField(choices=MODES)
+    status = models.BooleanField(choices=Device.STATUS_OPTION, default=False)
+    temperature = models.PositiveSmallIntegerField(validators=[MinValueValidator(MIN_TEMP), MaxValueValidator(MAX_TEMP)], default=MIN_TEMP)
+    mode = models.PositiveSmallIntegerField(choices=MODES, default=AUTO)
 
     def __str__(self):
         return self.device.room.room_name + ' ' + self.device.name
@@ -102,7 +106,7 @@ class TV(models.Model):
         (NETFLIX, 'Netflix')
     )
     device = models.OneToOneField(Device, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
+    status = models.BooleanField(choices=Device.STATUS_OPTION, default=False)
     volume = models.PositiveSmallIntegerField(validators=[MinValueValidator(MIN_VOL), MaxValueValidator(MAX_VOL)])
     input = models.CharField(max_length=15, choices=INPUT_TYPE, default=HDMI1)
 
@@ -118,7 +122,7 @@ class Lock(models.Model):
         (UNARMED, 'Unarmed')
     )
     device = models.OneToOneField(Device, on_delete=models.CASCADE)
-    security = models.BooleanField(choices=SECURITY_OPTIONS)
+    security = models.BooleanField(choices=SECURITY_OPTIONS, default=True)
 
     def __str__(self):
         return self.device.room.room_name + ' ' + self.device.name

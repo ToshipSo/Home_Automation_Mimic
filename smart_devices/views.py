@@ -2,7 +2,7 @@ from django.views.generic import CreateView, ListView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from smart_devices.forms import AddRoomForm
+from smart_devices.forms import *
 from smart_devices.models import *
 from smart_devices.serializers import *
 
@@ -17,7 +17,7 @@ class RoomView(ListView):
 class AddRoomView(CreateView):
     form_class = AddRoomForm
     template_name = 'add_form.html'
-    success_url = '/'
+    success_url = '/rooms'
 
     def get_context_data(self, **kwargs):
         ctx = super(AddRoomView, self).get_context_data(**kwargs)
@@ -25,12 +25,21 @@ class AddRoomView(CreateView):
         return ctx
 
 
+class AddDeviceView(CreateView):
+    form_class = AddDeviceForm
+    template_name = 'add_form.html'
+    success_url = '/rooms'
+
+
 class RoomDetailView(ListView):
     template_name = 'room_detail.html'
     context_object_name = 'devices'
 
     def get_queryset(self):
-        devices = Device.objects.filter(room=self.kwargs['pk'])
+        room_id = self.request.GET.get('room', None)
+        devices = Device.objects.all()
+        if room_id:
+            devices = devices.filter(room=room_id)
         return devices
 
 
@@ -55,3 +64,25 @@ class DeviceControlAPI(APIView):
             return Response(serializer.data)
 
 
+class DeleteRoomAPI(APIView):
+    def delete(self, request):
+        room = Room.objects.filter(pk=request.data['pk']).delete()
+        if room[0] != request.data['pk']:
+            return Response({
+                'Status': 'Could not find room {0}'.format(request.data['pk'])
+            })
+        return Response({
+            'Status': 'Room {0} deleted successfully'.format(request.data['pk'])
+        })
+
+
+class DeleteDeviceAPI(APIView):
+    def delete(self, request):
+        device = Device.objects.filter(pk=request.data['pk']).delete()
+        if device[0] != request.data['pk']:
+            return Response({
+                'Status': 'Could not find device {0}'.format(request.data['pk'])
+            })
+        return Response({
+            'Status': 'Device {0} deleted successfully'.format(request.data['pk'])
+        })

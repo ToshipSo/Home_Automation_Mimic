@@ -16,22 +16,30 @@
                 </div>
             {% endfor %}
 
-            <div style="background: url('{% static 'images/add_new.png' %}')" class="box one">
+            <div style="background: url('{% static 'images/add_new.png' %}')" class="box one" data-extra="add">
                 <h1>Add New Room</h1>
+            </div>
+            <div style="background: url('{% static 'images/add_new.png' %}')" class="box one" data-extra="all">
+                <h1>View All Devices</h1>
             </div>
         </div>
     </div>
 
 
+
     <script>
-        $('.box').click(function () {
+        $('div[data-room-id]').click(function () {
             var id = $(this).attr('data-room-id');
-            if (id === undefined){
-                window.location.href = '/add_room';
-                return false;
-            }
-            window.location.href = '{{ request.path }}/' + id;
+            window.location.href = '/devices?room=' + id;
             return false;
-        })
+        });
+        $('div[data-extra]').click(function () {
+            var extra = $(this).attr('data-extra');
+            if (extra === 'add')
+                window.location.href = '/add_room';
+            else if (extra === 'all')
+                window.location.href = '/devices';
+            return false;
+        });
     </script>
 {% endblock %}
