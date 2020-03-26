@@ -12,8 +12,8 @@ class Room(models.Model):
         (KITCHEN, 'Kitchen'),
         (BEDROOM, 'Bedroom')
     )
-    room_name = models.CharField(max_length=20)
     room_type = models.CharField(max_length=15, choices=ROOM_TYPE, default=BEDROOM)
+    room_name = models.CharField(max_length=20)
 
     def __str__(self):
         return self.room_name
@@ -25,7 +25,6 @@ class Device(models.Model):
     LIGHT = 'LIGHT'
     FAN = 'FAN'
     LOCK = 'LOCK'
-    ALARM = 'ALARM'
     STATUS_ON = True
     STATUS_OFF = False
     STATUS_OPTION = (
@@ -38,11 +37,10 @@ class Device(models.Model):
         (LIGHT, 'Light'),
         (FAN, 'Fan'),
         (LOCK, 'Lock'),
-        (ALARM, 'Alarm')
     )
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    name = models.CharField(max_length=20)
     type = models.CharField(max_length=20, choices=DEVICE_TYPE)
+    name = models.CharField(max_length=20)
 
     def __str__(self):
         return '{0} {1}'.format(self.room.room_name, self.name)

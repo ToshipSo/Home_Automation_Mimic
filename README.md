@@ -5,13 +5,15 @@
 * HTML, CSS, Javascript
 * SQLite3
 
-# Installation
-* `pip install -r requirements.txt` to install python libraries.
-* `python manage.py migrate` to migrate database.
-* `python manage.py createsuperuser` and fill the form to create a user.
+# Setup
+* Create a python virtual environment. (Optional)
+* Run `pip install -r requirements.txt` to install python libraries.
+* Run `python manage.py makemigrations` to create migration files.
+* Run `python manage.py migrate` to migrate database.
+* Run `python manage.py createsuperuser` and fill the form to create a user.
 
 # Run Application
-* `python manage.py runserver` to run application.
+* Run `python manage.py runserver` to run application.
 * Visit [http://localhost:8000](http://localhost:8000) to use app.
 * Log in using your superuser credentials.
 * Visit [http://localhost:8000/admin](http://localhost:8000/admin) to access django admin panel.
