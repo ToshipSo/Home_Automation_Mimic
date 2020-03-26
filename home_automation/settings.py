@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # third party
+    'crispy_forms',
+
+    # my app
     'smart_devices'
 ]
 
@@ -115,6 +119,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# crispy form for user creation and login form
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 # Static files (CSS, JavaScript, Images)

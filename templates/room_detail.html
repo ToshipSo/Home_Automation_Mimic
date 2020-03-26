@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Devices
+{% endblock %}
+{% block scripts %}
+    <link rel="stylesheet" href="{% static 'css/cards.css' %}">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="conatiner">
+<div class="wrap">
+
+    {% for device in devices %}
+        <div class="box one">
+		    <h1>{{ device.name }}</h1>
+            {% if device.type == device.LIGHT %}
+                <table>
+                    <tr>
+                        <td>Status</td>
+                        <td><input type="checkbox" {% if device.light.status %}checked{% endif %} data-toggle="toggle" data-onstyle="primary" data-offstyle="danger"></td>
+                    </tr>
+                    <tr>
+                        <td>Brightness</td>
+                        <td><input type="range" class="custom-range" min="{{ device.light.MIN_BRIGHTNESS }}" max="{{ device.light.MAX_BRIGHTNESS }}" step="1"></td>
+                    </tr>
+                </table>
+                {% elif device.type == device.FAN %}
+                <table>
+                    <tr>
+                        <td>Status</td>
+                        <td><input type="checkbox" {% if device.fan.status %}checked{% endif %} data-toggle="toggle" data-onstyle="primary" data-offstyle="danger"></td>
+                    </tr>
+                    <tr>
+                        <td>Speed</td>
+                        <td><input type="range" class="custom-range" min="{{ device.fan.MIN_SPEED }}" max="{{ device.fan.MAX_SPEED }}" step="1"></td>
+                    </tr>
+                </table>
+                {% elif device.type == device.AC %}
+                <table>
+                    <tr>
+                        <td>Status</td>
+                        <td><input type="checkbox" {% if device.ac.status %}checked{% endif %} data-toggle="toggle" data-onstyle="primary" data-offstyle="danger"></td>
+                    </tr>
+                    <tr>
+                        <td>Temperature</td>
+                        <td><input type="range" class="custom-range" min="{{ device.ac.MIN_TEMP }}" max="{{ device.ac.MAX_TEMP }}" step="1"></td>
+                    </tr>
+                    <tr>
+                        <td>Mode</td>
+                        <td><select name="mode" class="custom-select">
+                            {% for X, Y in device.ac.MODES %}
+                                <option value="{{ X }}" {% if device.ac.mode == X %}selected{% endif %}>{{ Y }}</option>
+                            {% endfor %}
+                        </select></td>
+                    </tr>
+                </table>
+                {% elif device.type == device.TV %}
+                <table>
+                    <tr>
+                        <td>Status</td>
+                        <td><input type="checkbox" {% if device.tv.status %}checked{% endif %} data-toggle="toggle" data-onstyle="primary" data-offstyle="danger"></td>
+                    </tr>
+                    <tr>
+                        <td>Volume</td>
+                        <td><input type="range" class="custom-range" min="{{ device.tv.MIN_VOL }}" max="{{ device.tv.MAX_VOL }}" step="1"></td>
+                    </tr>
+                    <tr>
+                        <td>Input</td>
+                        <td><select name="input" class="custom-select">
+                            {% for X, Y in device.tv.INPUT_TYPE %}
+                                <option value="{{ X }}" {% if device.tv.input == X %}selected{% endif %}>{{ Y }}</option>
+                            {% endfor %}
+                        </select></td>
+                    </tr>
+                </table>
+                {% elif device.type == device.LOCK %}
+                <table>
+                    <tr>
+                        <td>Security</td>
+                        <td><input type="checkbox" {% if device.lock.security %}checked{% endif %} data-toggle="toggle" data-on="Armed" data-off="Disarmed" data-onstyle="primary" data-offstyle="danger"></td>
+                    </tr>
+                </table>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+	<div style="background: url('{% static 'images/add_new.png' %}')" class="box one">
+                <h1>Add New Device</h1>
+            </div>
+
+
+</div>
+</div>
+{% endblock %}

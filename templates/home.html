@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}
+    Home
+{% endblock %}
 {% block scripts %}
     <link rel="stylesheet" href="{% static 'css/cards.css' %}">
 {% endblock %}
@@ -8,8 +11,8 @@
         <div class="wrap">
             {% for room in rooms %}
                 <div style="background: url('{% if room.room_type == 'HALL' %}{% static 'images/hall.png' %}{% elif room.room_type == 'KITCHEN' %}{% static 'images/kitchen.png' %}{% elif room.room_type == 'BEDROOM' %}{% static 'images/bedroom.png' %}{% endif %}')"
-                     class="box one">
-                    <h1>room.room_name</h1>
+                     class="box one" data-room-id="{{ room.pk }}">
+                    <h1>{{ room.room_name }}</h1>
                 </div>
             {% endfor %}
 
@@ -19,4 +22,16 @@
         </div>
     </div>
 
+
+    <script>
+        $('.box').click(function () {
+            var id = $(this).attr('data-room-id');
+            if (id === undefined){
+                window.location.href = '/add_room';
+                return false;
+            }
+            window.location.href = '{{ request.path }}/' + id;
+            return false;
+        })
+    </script>
 {% endblock %}

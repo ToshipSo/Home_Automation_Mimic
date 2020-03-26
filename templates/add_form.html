@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    {{ form_name }}
+{% endblock %}
+{% block content %}
+    <div class="container">
+    <h2 class="heading font-weight-light text-center">{{ form_name }}</h2>
+    <hr>
+    </div>
+    <div class="container w-25 card p-4 mt-4">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form | crispy }}
+            <input type="submit" value="Create" class="w-100 text-black text-center my-2 btn btn-primary">
+        </form>
+    </div>
+{% endblock %}
