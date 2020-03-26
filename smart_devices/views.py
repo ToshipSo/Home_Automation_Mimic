@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,14 +8,13 @@ from smart_devices.models import *
 from smart_devices.serializers import *
 
 
-# Create your views here.
-class RoomView(ListView):
+class RoomView(LoginRequiredMixin, ListView):
     queryset = Room.objects.all()
     template_name = 'home.html'
     context_object_name = 'rooms'
 
 
-class AddRoomView(CreateView):
+class AddRoomView(LoginRequiredMixin, CreateView):
     form_class = AddRoomForm
     template_name = 'add_form.html'
     success_url = '/rooms'
@@ -25,13 +25,24 @@ class AddRoomView(CreateView):
         return ctx
 
 
-class AddDeviceView(CreateView):
+class AddDeviceView(LoginRequiredMixin, CreateView):
     form_class = AddDeviceForm
     template_name = 'add_form.html'
-    success_url = '/rooms'
+    success_url = '/devices'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(AddDeviceView, self).get_context_data(**kwargs)
+        ctx['form_name'] = 'Add Device'
+        return ctx
+
+    def form_valid(self, form):
+        room = form.cleaned_data.get('room')
+        if room:
+            self.success_url = self.success_url + '?room=' + str(room.pk)
+        return super(AddDeviceView, self).form_valid(form)
 
 
-class RoomDetailView(ListView):
+class RoomDetailView(LoginRequiredMixin, ListView):
     template_name = 'room_detail.html'
     context_object_name = 'devices'
 

@@ -1,8 +1,10 @@
 from django.urls import path
+from django.views.generic import RedirectView
+
 from smart_devices.views import *
 
-
 urlpatterns = [
+    path('', RedirectView.as_view(url='/login'), name='redirect_to_login'),
     path('rooms', RoomView.as_view(), name='home'),
     path('devices', RoomDetailView.as_view(), name='room_detail'),
     path('add_room', AddRoomView.as_view(), name='add_room'),

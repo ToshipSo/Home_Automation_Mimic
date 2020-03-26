@@ -1,6 +1,6 @@
 from django.contrib import admin
-from smart_devices.models import *
 
+from smart_devices.models import *
 
 # Register your models here.
 admin.site.register(Room)

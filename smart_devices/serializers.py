@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer
+
 from smart_devices.models import Fan, Light, AC, TV, Lock
 
 

@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+
 from smart_devices.models import *
 
 
