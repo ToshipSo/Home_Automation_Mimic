@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # third party
     'crispy_forms',
+    'rest_framework',
 
     # my app
     'smart_devices'

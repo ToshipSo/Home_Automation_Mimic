@@ -6,4 +6,5 @@ urlpatterns = [
     path('room', RoomView.as_view(), name='home'),
     path('room/<int:pk>', RoomDetailView.as_view(), name='room_detail'),
     path('add_room', AddRoomView.as_view(), name='add_room'),
+    path('device_control', DeviceControlAPI.as_view(), name='devices'),
 ]
